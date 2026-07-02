@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il Lettore del Pensiero</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .card {
+            padding: 15px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 2rem;
+        }
+        .card span {
+            display: block;
+            font-size: 1rem;
+            color: #555;
+            margin-top: 5px;
+        }
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 10px 5px;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        #game-area {
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        .result {
+            font-size: 1.5rem;
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Indovino il tuo Animale! 🔮</h1>
+    
+    <div id="intro">
+        <p>Scegli uno di questi quattro animali e tienilo a mente:</p>
+        <div class="grid">
+            <div class="card">🐜 <span>Formica</span></div>
+            <div class="card">🐝 <span>Ape</span></div>
+            <div class="card">🐬 <span>Delfino</span></div>
+            <div class="card">🐶 <span>Cane</span></div>
+        </div>
+        <button class="btn" onclick="startGame()">Ho scelto!</button>
+    </div>
+
+    <div id="game-area" class="hidden">
+        <p id="question-text">Domanda...</p>
+        <button class="btn" onclick="handleAnswer(true)">SÌ</button>
+        <button class="btn" onclick="handleAnswer(false)">NO</button>
+    </div>
+
+    <div id="result-area" class="hidden">
+        <p class="result" id="result-text"></p>
+        <button class="btn" onclick="resetGame()">Gioca di nuovo</button>
+    </div>
+</div>
+
+<script>
+    let step = 1;
+    let isInsect = false;
+
+    const questionText = document.getElementById('question-text');
+    const intro = document.getElementById('intro');
+    const gameArea = document.getElementById('game-area');
+    const resultArea = document.getElementById('result-area');
+    const resultText = document.getElementById('result-text');
+
+    function startGame() {
+        intro.classList.add('hidden');
+        gameArea.classList.remove('hidden');
+        step = 1;
+        askQuestion();
+    }
+
+    function askQuestion() {
+        if (step === 1) {
+            questionText.innerText = "L'animale che hai scelto è un insetto?";
+        } else if (step === 2) {
+            if (isInsect) {
+                questionText.innerText = "L'animale che hai scelto può volare?";
+            } else {
+                questionText.innerText = "L'animale che hai scelto vive in acqua?";
+            }
+        }
+    }
+
+    function handleAnswer(ans) {
+        if (step === 1) {
+            isInsect = ans;
+            step = 2;
+            askQuestion();
+        } else if (step === 2) {
+            showResult(ans);
+        }
+    }
+
+    function showResult(ans) {
+        gameArea.classList.add('hidden');
+        resultArea.classList.remove('hidden');
+        
+        let finalChoice = "";
+        if (isInsect) {
+            finalChoice = ans ? "l'APE! 🐝" : "la FORMICA! 🐜";
+        } else {
+            finalChoice = ans ? "il DELFINO! 🐬" : "il CANE! 🐶";
+        }
+        
+        resultText.innerText = "Hai scelto " + finalChoice;
+    }
+
+    function resetGame() {
+        resultArea.classList.add('hidden');
+        intro.classList.remove('hidden');
+        step = 1;
+    }
+</script>
+
+</body>
+</html>
